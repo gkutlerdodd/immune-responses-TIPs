@@ -204,10 +204,10 @@ ylim_vl <- c(0, 52500)
 
 plot_cells <- function(df, show_x = TRUE, show_y = TRUE) {
   p <- ggplot(df, aes(x=n_prime_vals)) +
-    geom_line(aes(y=total_T_count), color="black", size=0.9) +
-    geom_line(aes(y=healthy_T_count), color="orange", size=0.9) +
-    geom_line(aes(y=Tt_count), color="blue", size=0.9) +
-    geom_line(aes(y=I_T_count), color="green", size=0.9) +
+    geom_line(aes(y=total_T_count), color="black", size=1.2) +
+    geom_line(aes(y=healthy_T_count), color="orange", size=1.2) +
+    geom_line(aes(y=Tt_count), color="blue", size=1.2) +
+    geom_line(aes(y=I_T_count), color="green", size=1.2) +
     geom_hline(yintercept = 10000, linetype="dashed") +
     theme_cowplot(12) +
     labs(x=NULL, y=NULL) +
@@ -225,7 +225,7 @@ plot_cells <- function(df, show_x = TRUE, show_y = TRUE) {
 #Plotting function for viral load
 plot_vl <- function(df, show_x = TRUE, show_y = TRUE) {
   p <- ggplot(df, aes(x=n_prime_vals, y=viral_load)) +
-    geom_line(size=0.9) +
+    geom_line(size=1.2) +
     theme_cowplot(12) +
     labs(x=NULL, y=NULL) +
     theme(axis.text=element_text(size=25),
@@ -253,11 +253,11 @@ plot2_vl <- wrap_elements(plot2_vl)
 main_plot <- plot1_cells + plot2_cells + plot1_vl + plot2_vl +
   plot_layout(widths = c(1, 1), heights = c(1, 1), ncol=2) &
   theme(
-    plot.margin = margin(20, 20, 20, 20),
+    plot.margin = margin(20, 20, 15, 20),
   )
 
 shared_x_plot <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5,
+  annotate("text", x = 0.5, y = 0,
            label = as.expression(bquote("Virus particles produced by a doubly infected cell (" * italic(n)*"')")),
            size = 12) +
   theme_void()
@@ -356,9 +356,9 @@ add_custom_VL_label <- function(plot) {
 }
 
 plot1 <- ggplot(df, aes(x=b_vals)) + 
-  geom_line(aes(y=r_0_1_vals), color="green", size=0.8) + 
-  geom_line(aes(y=r_0_2_vals), color="blue", size=0.8) + 
-  geom_line(aes(y=r_0_3_vals), color="orange", size=0.8) + 
+  geom_line(aes(y=r_0_1_vals), color="green", size=1.2) + 
+  geom_line(aes(y=r_0_2_vals), color="blue", size=1.2) + 
+  geom_line(aes(y=r_0_3_vals), color="orange", size=1.2) + 
   coord_cartesian(xlim=c(2e-6, 2e-5), ylim=c(1, 3.2), expand=TRUE) + 
   scale_x_continuous(breaks = c(2e-6, 8e-6, 1.4e-5, 2e-5), labels=scientific_10) + 
   labs(x=expression("Wild-type infection rate (" * beta * ")"), y=expression(R[0]^T)) +
@@ -367,16 +367,16 @@ plot1 <- ggplot(df, aes(x=b_vals)) +
   geom_vline(xintercept=4e-6, linetype="dashed")
 
 plot2 <- ggplot(df_2, aes(x=r_0_vals, y=ss_vals)) + 
-  geom_line(color="red", size=0.8) + 
-  geom_line(data=df_3, aes(x=r_0_vals, y=ss_vals), color="blue", linetype="dashed", size=0.8) +
+  geom_line(color="red", size=1.2) + 
+  geom_line(data=df_3, aes(x=r_0_vals, y=ss_vals), color="blue", linetype="dashed", size=1.2) +
   coord_cartesian(xlim=c(0.8, 3), ylim=c(30000, 60000), expand=TRUE) +
   labs(x = expression(R[0]^T), y = NULL) +
   theme_cowplot(12) +
   theme(axis.title = element_text(size = 25), axis.text = element_text(size = 20))
 
 plot3 <- ggplot(df_4, aes(x=r_0_vals, y=ss_vals)) + 
-  geom_line(color="red", size=0.8) + 
-  geom_line(data=df_5, aes(x=r_0_vals, y=ss_vals), color="blue", linetype="dashed", size=0.8) +
+  geom_line(color="red", size=1.2) + 
+  geom_line(data=df_5, aes(x=r_0_vals, y=ss_vals), color="blue", linetype="dashed", size=1.2) +
   coord_cartesian(xlim=c(0.8, 3), ylim=c(10000, 60000), expand=TRUE) +
   labs(x = expression(R[0]^T), y = NULL) +
   theme_cowplot(12) +
