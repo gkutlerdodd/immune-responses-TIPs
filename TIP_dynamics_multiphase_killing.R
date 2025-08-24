@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------------
 # Script Name: TIP_dynamics_multiphase_killing.R
-# Description: This script reproduces Supplementary Figure 3 from the manuscript
+# Description: This script reproduces Supplementary Figure 4 from the manuscript
 #              "Immune Responses May Make HIV-1 Therapeutic Interfering Particles Less Effective"
 #              It simulates TIP dynamics in our immune response model adjusted to include both early
 #              (eclipse phase) and late killing (see appendix B.3)
@@ -15,7 +15,7 @@
 #   - The script grind.R should be in the same directory
 #
 # Usage:
-#   Run the entire script to generate Supplementary Figure 3 from the paper.
+#   Run the entire script to generate Supplementary Figure 4 from the paper.
 #   Outputs will be saved in the '../Figures/' directory.
 #
 #
@@ -142,4 +142,4 @@ fig_all_labeled <- ggdraw(fig_all) +
   draw_label("Mild immune response", x=0.98, y=0.75, angle=-90, size=30) +
   draw_label("Moderate immune response", x=0.98, y=0.26, angle=-90, size=30)
   
-ggsave("../Figures/supfig3.png", fig_all_labeled, device="png", width=7500, height=5000, units="px")
+ggsave("../Figures/supfig4.png", fig_all_labeled, device="png", width=7500, height=5000, units="px")
