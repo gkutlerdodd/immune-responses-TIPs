@@ -8,7 +8,7 @@
 # Authors: Griffin Kutler Dodd, Rob J. de Boer
 #
 # Date Created: 2025-08-17
-# Last Modified: 2025-08-21
+# Last Modified: 2025-08-24
 #
 # Requirements:
 #   - Packages: ggplot2, patchwork, cowplot
@@ -49,7 +49,7 @@ model <- function(t, state, parms) {
 dir.create("../Figures", showWarnings = FALSE)
 
 ###############################
-#Generate Supplementary Figure 3
+#Generate Supplementary Figure 4
 ###############################
 
 #Note that this is a time-intensive simulation; reducing num_points_to_sample will speed it up significantly
