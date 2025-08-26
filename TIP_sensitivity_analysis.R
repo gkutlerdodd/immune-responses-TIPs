@@ -3,7 +3,8 @@
 # Description: This script reproduces Supplementary Figure 3 from the manuscript
 #              "Immune Responses May Make HIV-1 Therapeutic Interfering Particles Less Effective"
 #              It generates parameter sets using Latin hypercube sampling and
-#              performs global sensitivity analysis on the basic model.
+#              performs global sensitivity analysis on the basic model using partial
+#              rank correlation coefficients.
 #
 # Authors: Griffin Kutler Dodd, Rob J. de Boer
 #
@@ -124,12 +125,12 @@ for (i in 1:num_samples) {
 samples$change_in_VL <- change_in_VL
 
 #Perform global sensitivity analysis
-johnson <- johnson(X=samples[, names(param_ranges)], y=samples$change_in_VL)$johnson
-johnson_df <- data.frame(names(param_ranges), johnson$original)
-colnames(johnson_df) <- c('Parameter', 'J')
+prcc_data <- pcc(X=samples[, names(param_ranges)], y=samples$change_in_VL, rank=TRUE)$PRCC
+prcc_df <- data.frame(names(param_ranges), prcc_data)
+colnames(prcc_df) <- c('Parameter', 'PRCC')
 
-#Plot parameter sensitivities
-plot_johnson <- ggplot(johnson_df, aes(x = reorder(Parameter, abs(J), decreasing=FALSE), y = J, fill=abs(J))) +
+#Plot partial rank correlation coefficients
+plot_prcc <- ggplot(prcc_df, aes(x = Parameter, y = PRCC, fill=PRCC)) +
   coord_flip() +
   scale_x_discrete(labels=c("lambda" = expression(lambda), 
                             "d" = expression(italic(d)), 
@@ -141,9 +142,9 @@ plot_johnson <- ggplot(johnson_df, aes(x = reorder(Parameter, abs(J), decreasing
                             "n_prime_n_ratio"=expression(italic(n * "'"  / n)),
                             "b_prime_b_ratio"=expression(italic(beta * "'"/ beta)))) +
   geom_bar(stat = "identity", show.legend = FALSE) +
-  geom_text(aes(label = round(J, 5)), hjust = -0.2, size = 6, color = "black") +
-  scale_fill_gradient(low = "lightblue", high = "darkblue") +
-  labs(x = "Parameter", y = "Johnson's relative weight") +
+  geom_text(aes(label = round(PRCC, 3), hjust = ifelse(PRCC > 0, -0.2, 1.2)), size = 6, color = "black") +
+  scale_fill_gradient2(low = "#4575b4", mid="white", high = "#d73027", midpoint=0, limits=c(-1,1)) +
+  labs(x = "Parameter", y = "Partial Rank Correlation Coefficient") +
   theme_minimal() +
   theme(
     panel.grid = element_blank(),
@@ -157,8 +158,6 @@ plot_johnson <- ggplot(johnson_df, aes(x = reorder(Parameter, abs(J), decreasing
     panel.background = element_rect(fill = "white"),
     plot.background = element_rect(color = "white"),
   ) +
-  scale_y_continuous(limits=c(0,max(johnson_df$J)+0.05), expand = c(0,0))
+  scale_y_continuous(limits=c(min(prcc_df$PRCC) - 0.1, max(prcc_df$PRCC) + 0.1), expand = c(0,0))
 
-ggsave("../Figures/supfig3.png", plot=plot_johnson, device="png", width=5000, height=2300, units="px")
-
-
+ggsave("../Figures/supfig3.png", plot=plot_prcc, device="png", width=5000, height=2300, units="px")
