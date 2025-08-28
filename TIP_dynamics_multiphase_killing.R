@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------------
 # Script Name: TIP_dynamics_multiphase_killing.R
-# Description: This script reproduces Supplementary Figure 4 from the manuscript
+# Description: This script reproduces Supplementary Figure 3 from the manuscript
 #              "Immune Responses May Make HIV-1 Therapeutic Interfering Particles Less Effective"
 #              It simulates TIP dynamics in our immune response model adjusted to include both early
 #              (eclipse phase) and late killing (see appendix B.3)
@@ -8,14 +8,14 @@
 # Authors: Griffin Kutler Dodd, Rob J. de Boer
 #
 # Date Created: 2025-08-17
-# Last Modified: 2025-08-24
+# Last Modified: 2025-08-28
 #
 # Requirements:
 #   - Packages: ggplot2, patchwork, cowplot
 #   - The script grind.R should be in the same directory
 #
 # Usage:
-#   Run the entire script to generate Supplementary Figure 4 from the paper.
+#   Run the entire script to generate Supplementary Figure 3 from the paper.
 #   Outputs will be saved in the '../Figures/' directory.
 #
 #
@@ -24,6 +24,7 @@
 source("grind.R")
 library(ggplot2)
 library(cowplot)
+library(patchwork)
 
 #Define the model
 model <- function(t, state, parms) {
@@ -49,7 +50,7 @@ model <- function(t, state, parms) {
 dir.create("../Figures", showWarnings = FALSE)
 
 ###############################
-#Generate Supplementary Figure 4
+#Generate Supplementary Figure 3
 ###############################
 
 #Note that this is a time-intensive simulation; reducing num_points_to_sample will speed it up significantly
@@ -70,13 +71,13 @@ ss_VL_without_TIPs_mild_onlyk1 <- get_ss_viral_load(k1=1e-4, e1=1, k2=0, e2=0, c
 ss_mild_onlyk1 <- newton(silent=TRUE)$state
 ss_VL_without_TIPs_moderate_onlyk1 <- get_ss_viral_load(k1=1e-3, e1=1, k2=0, e2=0, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
 ss_moderate_onlyk1 <- newton(silent=TRUE)$state
-ss_VL_without_TIPs_mild_onlyk2 <- get_ss_viral_load(k1=0, e1=0, k2=1.3e-4, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
+ss_VL_without_TIPs_mild_onlyk2 <- get_ss_viral_load(k1=0, e1=0, k2=6.7e-5, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
 ss_mild_onlyk2 <- newton(silent=TRUE)$state
-ss_VL_without_TIPs_moderate_onlyk2 <- get_ss_viral_load(k1=0, e1=0, k2=5e-3, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
+ss_VL_without_TIPs_moderate_onlyk2 <- get_ss_viral_load(k1=0, e1=0, k2=6e-4, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
 ss_moderate_onlyk2 <- newton(silent=TRUE)$state
-ss_VL_without_TIPs_mild_k1andk2 <- get_ss_viral_load(k1=2.4e-5, e1=1, k2=2.4e-5, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
+ss_VL_without_TIPs_mild_k1andk2 <- get_ss_viral_load(k1=3.2e-5, e1=1, k2=2.15e-5, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
 ss_mild_k1andk2 <- newton(silent=TRUE)$state
-ss_VL_without_TIPs_moderate_k1andk2 <- get_ss_viral_load(k1=4e-4, e1=1, k2=4e-4, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
+ss_VL_without_TIPs_moderate_k1andk2 <- get_ss_viral_load(k1=1e-4, e1=1, k2=6.7e-5, e2=1, c(Tt=10000, I_1=0, I_2=0, I_T1=0, I_T2=0, I_D1=0, I_D2=0, V=5, V_M=0, V_T=0, V_H=0, E=1))
 ss_moderate_k1andk2 <- newton(silent=TRUE)$state
 
 #Function to generate each panel
@@ -108,11 +109,11 @@ simulate_panel <- function(k1, e1, k2, e2, s_baseline, baseline_VL) {
 
 panel_settings <- list(
   list(k1=1e-4, e1=1, k2=0, e2=0, s=ss_mild_onlyk1, vl=ss_VL_without_TIPs_mild_onlyk1),
-  list(k1=0, e1=0, k2=1.3e-4, e2=1, s=ss_mild_onlyk2, vl=ss_VL_without_TIPs_mild_onlyk2),
-  list(k1=2.4e-5, e1=1, k2=2.4e-5, e2=1, s=ss_mild_k1andk2, vl=ss_VL_without_TIPs_mild_k1andk2),
+  list(k1=0, e1=0, k2=6.7e-5, e2=1, s=ss_mild_onlyk2, vl=ss_VL_without_TIPs_mild_onlyk2),
+  list(k1=3.2e-5, e1=1, k2=2.15e-5, e2=1, s=ss_mild_k1andk2, vl=ss_VL_without_TIPs_mild_k1andk2),
   list(k1=1e-3, e1=1, k2=0, e2=0, s=ss_moderate_onlyk1, vl=ss_VL_without_TIPs_moderate_onlyk1),
-  list(k1=0, e1=0, k2=5e-3, e2=1, s=ss_moderate_onlyk2, vl=ss_VL_without_TIPs_moderate_onlyk2),
-  list(k1=4e-4, e1=1, k2=4e-4, e2=1, s=ss_moderate_k1andk2, vl=ss_VL_without_TIPs_moderate_k1andk2)
+  list(k1=0, e1=0, k2=6e-4, e2=1, s=ss_moderate_onlyk2, vl=ss_VL_without_TIPs_moderate_onlyk2),
+  list(k1=1e-4, e1=1, k2=6.7e-5, e2=1, s=ss_moderate_k1andk2, vl=ss_VL_without_TIPs_moderate_k1andk2)
 )
 
 plots <- lapply(panel_settings, function(cfg) {
@@ -123,23 +124,23 @@ plots <- lapply(panel_settings, function(cfg) {
 (fig_all <- (plots[[1]] + plots[[2]] + plots[[3]] + plots[[4]] + plots[[5]] + plots[[6]]) + 
     plot_layout(nrow=2) & 
     theme(panel.grid = element_blank(),
-          axis.text = element_text(size = 25, color = "black"),
+          axis.text = element_text(size = 30, color = "black"),
           axis.ticks = element_line(size = 0.3),
-          axis.title.x = element_text(size = 30),
-          axis.title.y = element_text(size = 30),
+          axis.title.x = element_text(size = 35),
+          axis.title.y = element_text(size = 35),
           panel.border = element_rect(colour = "black", fill=NA, linewidth=0.5),
           text = element_text(family = "Arial"),
           plot.margin = margin(25,35,25,35)))
 
 fig_all_labeled <- ggdraw(fig_all) +
   draw_label(bquote(paste("Virus particles produced by a doubly infected cell (",italic("n'"),")")),
-             x = 0.5, y = 0.01, vjust = 0, size = 33) +
+             x = 0.5, y = 0.005, vjust = 0, size = 38) +
   draw_label(bquote(paste("Fraction of wild-type RNA in a doubly infected cell (",italic(f),")")),
-             x = 0.02, y = 0.5, angle = 90, vjust = 1, size = 33) +
-  draw_label("Early killing", x=0.185, y=0.98, size=30) +
-  draw_label("Late killing", x=0.512, y=0.98, size=30) +
-  draw_label("Constant killing", x=0.835, y=0.98, size=30) +
-  draw_label("Mild immune response", x=0.98, y=0.75, angle=-90, size=30) +
-  draw_label("Moderate immune response", x=0.98, y=0.26, angle=-90, size=30)
+             x = 0.015, y = 0.5, angle = 90, vjust = 1, size = 38) +
+  draw_label("Early killing", x=0.185, y=0.98, size=35) +
+  draw_label("Late killing", x=0.512, y=0.98, size=35) +
+  draw_label("Constant killing", x=0.835, y=0.98, size=35) +
+  draw_label("Mild immune response", x=0.975, y=0.75, angle=-90, size=35) +
+  draw_label("Moderate immune response", x=0.975, y=0.265, angle=-90, size=35)
   
 ggsave("../Figures/supfig4.png", fig_all_labeled, device="png", width=7500, height=5000, units="px")
