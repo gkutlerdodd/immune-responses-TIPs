@@ -9,7 +9,7 @@
 # Authors: Griffin Kutler Dodd, Rob J. de Boer
 #
 # Date Created: 2025-08-24
-# Last Modified: 2025-08-24
+# Last Modified: 2025-08-28
 #
 # Requirements:
 #   - Packages: ggplot2, lhs, sensitivity
@@ -142,22 +142,22 @@ plot_prcc <- ggplot(prcc_df, aes(x = Parameter, y = PRCC, fill=PRCC)) +
                             "n_prime_n_ratio"=expression(italic(n * "'"  / n)),
                             "b_prime_b_ratio"=expression(italic(beta * "'"/ beta)))) +
   geom_bar(stat = "identity", show.legend = FALSE) +
-  geom_text(aes(label = round(PRCC, 3), hjust = ifelse(PRCC > 0, -0.2, 1.2)), size = 6, color = "black") +
+  geom_text(aes(label = round(PRCC, 3), hjust = ifelse(PRCC > 0, -0.2, 1.2)), size = 10, color = "black") +
   scale_fill_gradient2(low = "#4575b4", mid="white", high = "#d73027", midpoint=0, limits=c(-1,1)) +
   labs(x = "Parameter", y = "Partial Rank Correlation Coefficient") +
   theme_minimal() +
   theme(
     panel.grid = element_blank(),
-    axis.text = element_text(size = 25, color = "black"),
+    axis.text = element_text(size = 35, color = "black"),
     axis.ticks = element_line(size = 0.3),
-    axis.title.x = element_text(size = 30, margin = margin(t = 10)),
-    axis.title.y = element_text(size = 30),
+    axis.title.x = element_text(size = 35, margin = margin(t = 10)),
+    axis.title.y = element_text(size = 35),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.5),
     text = element_text(family = "Arial"),
     axis.text.y = element_text(margin = margin(r = 10)),
     panel.background = element_rect(fill = "white"),
     plot.background = element_rect(color = "white"),
   ) +
-  scale_y_continuous(limits=c(min(prcc_df$PRCC) - 0.1, max(prcc_df$PRCC) + 0.1), expand = c(0,0))
+  scale_y_continuous(limits=c(min(prcc_df$PRCC) - 0.15, max(prcc_df$PRCC) + 0.15), expand = c(0,0))
 
 ggsave("../Figures/supfig3.png", plot=plot_prcc, device="png", width=5000, height=2300, units="px")
